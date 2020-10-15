@@ -91,4 +91,31 @@ public class EmployeeServiceImplTest {
         assertEquals(readEmployee, updatedEmployee);
     }
 
+    @Test
+    public void testReadFailure() {
+        Employee testEmployee = new Employee();
+        testEmployee.setEmployeeId("32dd0a12-0da7-11eb-adc1-0242ac120002");
+        testEmployee.setFirstName("John");
+        testEmployee.setLastName("Doe");
+        testEmployee.setDepartment("Engineering");
+        testEmployee.setPosition("Developer");
+
+        ResponseEntity readEmployeeResponse = restTemplate.getForEntity(employeeIdUrl, Employee.class, testEmployee.getEmployeeId());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, readEmployeeResponse.getStatusCode());
+    }
+
+    @Test
+    public void testMalformedRead() {
+        Employee testEmployee = new Employee();
+        // Missing employeesId
+        // testEmployee.setEmployeeId("32dd0a12-0da7-11eb-adc1-0242ac120002");
+        testEmployee.setFirstName("John");
+        testEmployee.setLastName("Doe");
+        testEmployee.setDepartment("Engineering");
+        testEmployee.setPosition("Developer");
+
+        ResponseEntity readEmployeeResponse = restTemplate.getForEntity(employeeIdUrl, Employee.class, testEmployee.getEmployeeId());
+        assertEquals(HttpStatus.METHOD_NOT_ALLOWED, readEmployeeResponse.getStatusCode());
+    }
+
 }
