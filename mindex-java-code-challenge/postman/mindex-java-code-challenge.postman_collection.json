@@ -1,0 +1,183 @@
+{
+	"info": {
+		"_postman_id": "b3f2f21d-675e-4b6c-abb1-a6e711b4faa7",
+		"name": "mindex-java-code-challenge",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Employee",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "25238167-ad1d-4865-b500-97ac13f9b6d7",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": " {\n    \"employeeId\" : \"\",\n    \"firstName\" : \"Jeffrey\",\n    \"lastName\" : \"Haines\",\n    \"position\" : \"Awesome Developer\",\n    \"department\" : \"Engineering\",\n    \"directReports\" : [\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/employee/",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"employee",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Employee",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/employee/:employeeId",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"employee",
+						":employeeId"
+					],
+					"variable": [
+						{
+							"key": "employeeId",
+							"value": "16a596ae-edd3-4847-99fe-c4518e82c86f",
+							"type": "string"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Employee",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": " {\n    \"employeeId\" : \"{{TEST_UUID}}\",\n    \"firstName\" : \"{{TEST_FIRST_NAME}}\",\n    \"lastName\" : \"{{TEST_LAST_NAME}}\",\n    \"position\" : \"{{TEST_POSITION}}\",\n    \"department\" : \"{{TEST_DEPARTMENT}}\",\n    \"directReports\" : [\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/employee/:employeeId",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"employee",
+						":employeeId"
+					],
+					"variable": [
+						{
+							"key": "employeeId",
+							"value": "16a596ae-edd3-4847-99fe-c4518e82c86f",
+							"type": "string"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Reporting Structure",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/reportingStructure/:employeeId",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"reportingStructure",
+						":employeeId"
+					],
+					"variable": [
+						{
+							"key": "employeeId",
+							"value": "16a596ae-edd3-4847-99fe-c4518e82c86f",
+							"type": "string"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Compensation",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"employee\": {\n        \"employeeId\" : \"16a596ae-edd3-4847-99fe-c4518e82c86f\"\n    },\n    \"salary\": \"999,999,999 GPD\",\n    \"effectiveDate\": \"2020-10-20T00:00:00Z\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/compensation",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"compensation"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Compensation",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/compensation/:employeeId",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"compensation",
+						":employeeId"
+					],
+					"variable": [
+						{
+							"key": "employeeId",
+							"value": "16a596ae-edd3-4847-99fe-c4518e82c86f"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
