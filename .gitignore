@@ -4,3 +4,7 @@
 .vs
 obj
 bin
+.gradle/
+.project
+.settings/
+build/

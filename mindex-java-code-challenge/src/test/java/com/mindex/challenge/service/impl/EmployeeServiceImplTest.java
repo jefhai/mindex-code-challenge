@@ -7,6 +7,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
@@ -16,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringRunner.class)
@@ -49,38 +52,43 @@ public class EmployeeServiceImplTest {
         testEmployee.setPosition("Developer");
 
         // Create checks
-        Employee createdEmployee = restTemplate.postForEntity(employeeUrl, testEmployee, Employee.class).getBody();
+        ResponseEntity createEmployeeResponse = restTemplate.postForEntity(employeeUrl, testEmployee, Employee.class);
+        Employee createdEmployee = (Employee)createEmployeeResponse.getBody();
+        assertEquals(HttpStatus.OK, createEmployeeResponse.getStatusCode());
 
+        // the service generates a new employeeId
         assertNotNull(createdEmployee.getEmployeeId());
-        assertEmployeeEquivalence(testEmployee, createdEmployee);
-
+        assertNotEquals(testEmployee.getEmployeeId(), createdEmployee.getEmployeeId());
+        
+        testEmployee.setEmployeeId(createdEmployee.getEmployeeId());
+        assertEquals(testEmployee, createdEmployee);
 
         // Read checks
-        Employee readEmployee = restTemplate.getForEntity(employeeIdUrl, Employee.class, createdEmployee.getEmployeeId()).getBody();
-        assertEquals(createdEmployee.getEmployeeId(), readEmployee.getEmployeeId());
-        assertEmployeeEquivalence(createdEmployee, readEmployee);
+        ResponseEntity readEmployeeResponse = restTemplate.getForEntity(employeeIdUrl, Employee.class, createdEmployee.getEmployeeId());
+        Employee readEmployee = (Employee)readEmployeeResponse.getBody();
+        assertEquals(HttpStatus.OK, readEmployeeResponse.getStatusCode());
 
+        assertEquals(createdEmployee.getEmployeeId(), readEmployee.getEmployeeId());
+        assertEquals(createdEmployee, readEmployee);
 
         // Update checks
+        readEmployee.setFirstName("John John");
+        readEmployee.setLastName("Doe Doe");
+        readEmployee.setDepartment("Engineering Department");
         readEmployee.setPosition("Development Manager");
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        Employee updatedEmployee =
-                restTemplate.exchange(employeeIdUrl,
-                        HttpMethod.PUT,
-                        new HttpEntity<Employee>(readEmployee, headers),
-                        Employee.class,
-                        readEmployee.getEmployeeId()).getBody();
+        ResponseEntity updateEmployeeResponse = restTemplate.exchange(employeeIdUrl,
+                                                            HttpMethod.PUT,
+                                                            new HttpEntity<Employee>(readEmployee, headers),
+                                                            Employee.class,
+                                                            readEmployee.getEmployeeId());
+        Employee updatedEmployee = (Employee)updateEmployeeResponse.getBody();
+        assertEquals(HttpStatus.OK, updateEmployeeResponse.getStatusCode());
 
-        assertEmployeeEquivalence(readEmployee, updatedEmployee);
+        assertEquals(readEmployee, updatedEmployee);
     }
 
-    private static void assertEmployeeEquivalence(Employee expected, Employee actual) {
-        assertEquals(expected.getFirstName(), actual.getFirstName());
-        assertEquals(expected.getLastName(), actual.getLastName());
-        assertEquals(expected.getDepartment(), actual.getDepartment());
-        assertEquals(expected.getPosition(), actual.getPosition());
-    }
 }

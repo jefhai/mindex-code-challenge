@@ -36,6 +36,7 @@ public class MongoConfig{
     public MongoClient mongoClient() {
         return MongoClients.create("mongodb:/" + mongoServer().getLocalAddress());
     }
+
 }
 
 
